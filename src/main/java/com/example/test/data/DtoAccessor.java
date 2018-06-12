@@ -1,4 +1,4 @@
-package com.example.test.utils;
+package com.example.test.data;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;

@@ -1,6 +1,6 @@
 package com.example.test.sql;
 
-import com.example.test.utils.DtoAccessor;
+import com.example.test.data.DtoAccessor;
 import com.example.test.utils.StringUtils;
 
 public class SqlGenerator {

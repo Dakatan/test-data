@@ -1,7 +1,5 @@
 package com.example.test.data;
 
-import com.example.test.utils.DtoAccessor;
-
 import java.util.*;
 
 public class DtoFactory<T> {

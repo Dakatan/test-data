@@ -2,7 +2,7 @@ package com.example.test;
 
 import com.example.test.data.DtoFactory;
 import com.example.test.sql.SqlGenerator;
-import com.example.test.utils.DtoAccessor;
+import com.example.test.data.DtoAccessor;
 import com.example.test.utils.StringUtils;
 
 import java.util.List;
