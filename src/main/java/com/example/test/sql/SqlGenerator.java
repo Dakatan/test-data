@@ -4,6 +4,7 @@ import com.example.test.utils.DtoAccessor;
 import com.example.test.utils.StringUtils;
 
 public class SqlGenerator {
+
   public static String toSql(String tableName, Object object) {
     StringBuilder sb = new StringBuilder();
     sb.append("INSERT INTO ").append(tableName.toUpperCase());

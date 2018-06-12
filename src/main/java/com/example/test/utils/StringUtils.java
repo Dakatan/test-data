@@ -2,6 +2,18 @@ package com.example.test.utils;
 
 public class StringUtils {
 
+  public static String[] camelToSnake(String[] camels) {
+    return camelToSnake(camels, false);
+  }
+
+  public static String[] camelToSnake(String[] camels, boolean uppercase) {
+    String[] result = new String[camels.length];
+    for(int i = 0; i < camels.length; i++) {
+      result[i] = camelToSnake(camels[i], uppercase);
+    }
+    return result;
+  }
+
   public static String camelToSnake(String camel) {
     return camelToSnake(camel, false);
   }
@@ -17,6 +29,14 @@ public class StringUtils {
       }
     }
     return uppercase ? sb.toString().toUpperCase() : sb.toString().toLowerCase();
+  }
+
+  public static String[] snakeToCamel(String[] snakes) {
+    String[] result = new String[snakes.length];
+    for(int i = 0; i < snakes.length; i++) {
+      result[i] = snakeToCamel(snakes[i]);
+    }
+    return result;
   }
 
   public static String snakeToCamel(String snake) {
