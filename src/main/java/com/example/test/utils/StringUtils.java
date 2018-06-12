@@ -1,31 +1,34 @@
 package com.example.test.utils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class StringUtils {
 
-  public static String camelToSnake(String str) {
-    return camelToSnake(str, true);
+  public static String camelToSnake(String camel) {
+    return camelToSnake(camel, false);
   }
 
-  public static String camelToSnake(String str, boolean uppercase) {
-    String convertedStr = str
-            .replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
-            .replaceAll("([a-z])([A-Z])", "$1_$2");
-    return uppercase ? convertedStr.toUpperCase() : convertedStr.toLowerCase();
-  }
-
-  public static String snakeToCamel(String str) {
-    Pattern p = Pattern.compile("_([a-z])");
-    Matcher m = p.matcher(str.toLowerCase());
-
-    StringBuffer sb = new StringBuffer(str.length());
-    while (m.find()) {
-      m.appendReplacement(sb, m.group(1).toUpperCase());
+  public static String camelToSnake(String camel, boolean uppercase) {
+    final StringBuilder sb = new StringBuilder(camel.length() + camel.length());
+    for (int i = 0; i < camel.length(); i++) {
+      final char c = camel.charAt(i);
+      if (Character.isUpperCase(c)) {
+        sb.append(sb.length() != 0 ? '_' : "").append(Character.toLowerCase(c));
+      } else {
+        sb.append(Character.toLowerCase(c));
+      }
     }
+    return uppercase ? sb.toString().toUpperCase() : sb.toString().toLowerCase();
+  }
 
-    m.appendTail(sb);
+  public static String snakeToCamel(String snake) {
+    final StringBuilder sb = new StringBuilder(snake.length() + snake.length());
+    for (int i = 0; i < snake.length(); i++) {
+      final char c = snake.charAt(i);
+      if (c == '_') {
+        sb.append((i + 1) < snake.length() ? Character.toUpperCase(snake.charAt(++i)) : "");
+      } else {
+        sb.append(sb.length() == 0 ? Character.toUpperCase(c) : Character.toLowerCase(c));
+      }
+    }
     return sb.toString();
   }
 }

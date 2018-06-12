@@ -10,9 +10,10 @@ import java.util.List;
 
 public class DtoAccessor {
 
-  public static void set(String key, String value, Object dest) {
+  public static void set(String key, Object value, Object dest) {
     BeanInfo beanInfo = getBeanInfo(dest.getClass());
     PropertyDescriptor properties[] = getReadableWritableProperties(beanInfo);
+
     for(PropertyDescriptor property : properties) {
       if(key.equals(property.getName())) {
         invokeInternal(dest, property.getWriteMethod(), value);
@@ -20,42 +21,53 @@ public class DtoAccessor {
     }
   }
 
-  public static String get(String key, Object target) {
+  public static Object get(String key, Object target) {
     BeanInfo beanInfo = getBeanInfo(target.getClass());
     PropertyDescriptor properties[] = getReadableWritableProperties(beanInfo);
+
     for(PropertyDescriptor property : properties) {
       if(key.equals(property.getName())) {
-        return (String) invokeInternal(target, property.getReadMethod());
+        return invokeInternal(target, property.getReadMethod());
       }
     }
     return null;
   }
 
   public static String toCsvString(Object target) {
-    final String comma = ",";
+    return toCsvString(target, ",");
+  }
+
+  public static String toCsvString(Object target, String delm) {
     StringBuilder sb = new StringBuilder();
-    String[] columns = getColumns(target.getClass());
+    String[] propertyNames = getPropertyNames(target.getClass());
+
     List<String> list = new LinkedList<>();
-    for(String column : columns) {
-      String value = get(column, target);
-      if(value == null) value = "";
+    for(String propertyName : propertyNames) {
+      Object obj = get(propertyName, target);
+      String value;
+      if(obj == null) {
+        value = "";
+      } else if(obj instanceof String) {
+        value = (String) obj;
+      } else if(obj instanceof Number || obj instanceof Boolean) {
+        value = String.valueOf(obj);
+      } else {
+        value = obj.toString();
+      }
       list.add(value);
     }
-    sb.append(String.join(comma, list.toArray(new String[list.size()])));
+
+    sb.append(String.join(delm, list.toArray(new String[list.size()])));
     return sb.toString();
   }
 
-  public static String[] getColumns(Class<?> clazz) {
-    return getColumns(clazz, false);
-  }
-
-  public static String[] getColumns(Class<?> clazz, boolean toSnakeCase) {
+  public static String[] getPropertyNames(Class<?> clazz) {
     BeanInfo beanInfo = getBeanInfo(clazz);
     PropertyDescriptor properties[] = getReadableWritableProperties(beanInfo);
     String[] result = new String[properties.length];
     for(int i = 0; i < properties.length; i++) {
       PropertyDescriptor property = properties[i];
-      result[i] = toSnakeCase ? StringUtils.camelToSnake(property.getName()) : property.getName();
+      result[i] = property.getName();
     }
     return result;
   }
@@ -71,6 +83,7 @@ public class DtoAccessor {
   private static PropertyDescriptor[] getReadableWritableProperties(BeanInfo beanInfo) {
     PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
     List<PropertyDescriptor> list = new LinkedList<>();
+
     for(PropertyDescriptor property : properties) {
       if(property.getWriteMethod() != null && property.getReadMethod() != null) {
         list.add(property);

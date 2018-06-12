@@ -7,12 +7,12 @@ import java.util.*;
 public class DtoFactory<T> {
   private final Class<T> clazz;
   private final Random random = new Random();
-  private Map<String, List<String>> dataVariations;
+  private Map<String, List<Object>> dataVariations;
 
   public DtoFactory(Class<T> clazz) {
     this.clazz = clazz;
     dataVariations = new HashMap<>();
-    String[] columns = DtoAccessor.getColumns(clazz);
+    String[] columns = DtoAccessor.getPropertyNames(clazz);
     for(String column : columns) {
       dataVariations.put(column, new ArrayList<>());
     }
@@ -28,7 +28,7 @@ public class DtoFactory<T> {
 
   public T create() {
     T dto = createInternal();
-    for(Map.Entry<String, List<String>> entry : dataVariations.entrySet()) {
+    for(Map.Entry<String, List<Object>> entry : dataVariations.entrySet()) {
       if(entry.getValue().size() != 0) {
         int index = random.nextInt(entry.getValue().size());
         DtoAccessor.set(entry.getKey(), entry.getValue().get(index), dto);
@@ -37,31 +37,13 @@ public class DtoFactory<T> {
     return dto;
   }
 
-  public void setVariation(String key, List<String> value) {
-    if(!dataVariations.containsKey(key)) {
-      return;
-    }
-    dataVariations.put(key, value);
-  }
-
-  public void setVariation(String key, String[] value) {
-    if(!dataVariations.containsKey(key)) {
-      return;
-    }
-    dataVariations.put(key, Arrays.asList(value));
-  }
-
-  public void addVariation(String key, String value) {
-    if(!dataVariations.containsKey(key)) {
-      return;
-    }
+  public void addVariation(String key, Object value) {
+    if(!dataVariations.containsKey(key)) return;
     dataVariations.get(key).add(value);
   }
 
-  public void resetVariation(String key) {
-    if(!dataVariations.containsKey(key)) {
-      return;
-    }
+  public void clearVariation(String key) {
+    if(!dataVariations.containsKey(key)) return;
     dataVariations.get(key).clear();
   }
 
@@ -74,5 +56,4 @@ public class DtoFactory<T> {
     }
     return result;
   }
-
 }

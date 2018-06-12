@@ -4,6 +4,8 @@ public class User {
   private String name;
   private String address;
   private String age;
+  private int count;
+  private String myString;
 
   public String getName() {
     return name;
@@ -27,5 +29,21 @@ public class User {
 
   public void setAge(String age) {
     this.age = age;
+  }
+
+  public int getCount() {
+    return count;
+  }
+
+  public void setCount(int count) {
+    this.count = count;
+  }
+
+  public String getMyString() {
+    return myString;
+  }
+
+  public void setMyString(String myString) {
+    this.myString = myString;
   }
 }
