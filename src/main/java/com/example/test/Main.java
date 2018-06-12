@@ -8,22 +8,9 @@ import java.util.List;
 public class Main {
   public static void main(String[] args) {
     DtoFactory<User> factory = new DtoFactory<>(User.class);
-    factory.addVariation("name", new String[]{
-            "Tom",
-            "John",
-            "Alex",
-            "Jim"
-    });
-    factory.addVariation("address", new String[]{
-            "Tokyo",
-            "America",
-            "Osaka"
-    });
-    factory.addVariation("age", new String[]{
-            "21",
-            "22",
-            "23"
-    });
+    factory.addVariation("name", "Tom");
+    factory.addVariation("address", "Tokyo");
+    factory.addVariation("age", "21");
     List<User> users = factory.create(10);
     for(User user : users) System.out.println(DtoAccessor.toCsvString(user));
   }

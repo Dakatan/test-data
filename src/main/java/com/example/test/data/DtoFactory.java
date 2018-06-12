@@ -12,6 +12,10 @@ public class DtoFactory<T> {
   public DtoFactory(Class<T> clazz) {
     this.clazz = clazz;
     dataVariations = new HashMap<>();
+    String[] columns = DtoAccessor.getColumns(clazz);
+    for(String column : columns) {
+      dataVariations.put(column, new ArrayList<>());
+    }
   }
 
   public List<T> create(final int size) {
@@ -33,16 +37,32 @@ public class DtoFactory<T> {
     return dto;
   }
 
-  public void addVariation(String key, List<String> value) {
+  public void setVariation(String key, List<String> value) {
+    if(!dataVariations.containsKey(key)) {
+      return;
+    }
     dataVariations.put(key, value);
   }
 
-  public void addVariation(String key, String[] value) {
+  public void setVariation(String key, String[] value) {
+    if(!dataVariations.containsKey(key)) {
+      return;
+    }
     dataVariations.put(key, Arrays.asList(value));
   }
 
-  public void removeVariation(String key) {
-    dataVariations.remove(key);
+  public void addVariation(String key, String value) {
+    if(!dataVariations.containsKey(key)) {
+      return;
+    }
+    dataVariations.get(key).add(value);
+  }
+
+  public void resetVariation(String key) {
+    if(!dataVariations.containsKey(key)) {
+      return;
+    }
+    dataVariations.get(key).clear();
   }
 
   private T createInternal() {

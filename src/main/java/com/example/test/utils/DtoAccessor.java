@@ -34,7 +34,7 @@ public class DtoAccessor {
   public static String toCsvString(Object target) {
     final String comma = ",";
     StringBuilder sb = new StringBuilder();
-    String[] columns = getColumns(target);
+    String[] columns = getColumns(target.getClass());
     List<String> list = new LinkedList<>();
     for(String column : columns) {
       String value = get(column, target);
@@ -45,12 +45,12 @@ public class DtoAccessor {
     return sb.toString();
   }
 
-  public static String[] getColumns(Object target) {
-    return getColumns(target, false);
+  public static String[] getColumns(Class<?> clazz) {
+    return getColumns(clazz, false);
   }
 
-  public static String[] getColumns(Object target, boolean toSnakeCase) {
-    BeanInfo beanInfo = getBeanInfo(target.getClass());
+  public static String[] getColumns(Class<?> clazz, boolean toSnakeCase) {
+    BeanInfo beanInfo = getBeanInfo(clazz);
     PropertyDescriptor properties[] = getReadableWritableProperties(beanInfo);
     String[] result = new String[properties.length];
     for(int i = 0; i < properties.length; i++) {

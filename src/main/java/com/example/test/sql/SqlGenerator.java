@@ -4,7 +4,7 @@ import com.example.test.utils.DtoAccessor;
 
 public class SqlGenerator {
   public static String toSql(String tableName, Object object) {
-    String[] columns = DtoAccessor.getColumns(object, true);
+    String[] columns = DtoAccessor.getColumns(object.getClass(), true);
     StringBuilder sb = new StringBuilder();
     sb.append(String.join(", ", columns));
     String[] values = new String[columns.length];
